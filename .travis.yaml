@@ -1,8 +1,10 @@
+language: generic
+
 sudo: required
 
 services:
   - docker
-
+  
 env:
   global:
     - SHA=$(git rev parse HEAD)
@@ -15,8 +17,8 @@ before_install:
   - gcloud components update kubectl
   - gcloud auth activate-service-account --key-file service-account.json
   - gcloud config set project multi-k8s-302215
-  # - gcloud config set compute/zone us/central1-a #choose the cluster actual zone, "us/central1-a" is the course example
-  # - gcloud container clusters get-credentials multi-cluster 
+  - gcloud config set compute/zone us/central1-c #choose the cluster actual zone, "us/central1-a" is the course example
+  - gcloud container clusters get-credentials multi-cluster 
       # choose the actual cluster name, "multi-cluster" is the course example
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   - docker build -t maor30levy/react-test -f ./client/Dockerfile.dev ./client 
@@ -24,8 +26,8 @@ before_install:
 script:
   - docker run -e CI=true maor30levy/react-test npm test
 
-# deploy:
-#   provider: script
-#   script: bash ./deploy.sh
-#   on:
-#     branch: main
+deploy:
+  provider: script
+  script: bash ./deploy.sh
+  on:
+    branch: main

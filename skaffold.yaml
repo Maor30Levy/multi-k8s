@@ -1,0 +1,24 @@
+apiVersion: skaffold/v2beta10
+kind: Config
+build:
+  artifacts:
+  - image: maor30levy/multi-client
+    context: client
+    docker:
+      dockerfile: Dockerfile.dev
+  - image: maor30levy/multi-server
+    context: client
+    docker:
+      dockerfile: Dockerfile.dev
+  - image: maor30levy/multi-worker
+    context: server
+    docker:
+      dockerfile: Dockerfile.dev
+deploy:
+  kubectl:
+    manifests:
+    - k8s/client-cluster-ip-service.yaml
+    - k8s/client-deployment.yaml
+    - k8s/server-cluster-ip-service.yaml
+    - k8s/server-deployment.yaml
+    - k8s/worker-deployment.yaml
